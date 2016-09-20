@@ -43,9 +43,13 @@ func (t *ChainOfCustodyChaincode) Init(stub shim.ChaincodeStubInterface, functio
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	err := stub.PutState("hello_world", []byte(args[0]))
+	err := stub.PutState("originalFileHash", []byte(args[0]))
 	if err != nil {
 		return nil, err
+	}
+	err2 := stub.PutState("currentFileLocation", []byte(args[0]))
+	if err2 != nil {
+		return nil, err2
 	}
 
 	return nil, nil
@@ -92,10 +96,7 @@ func (t *ChainOfCustodyChaincode) Query(stub shim.ChaincodeStubInterface, functi
 	if function == "read" { //read a variable
 		return t.read(stub, args)
 	}
-	if function == "dummy_query" { //read a variable
-		fmt.Println("hi there " + function) //error
-		return nil, nil
-	}
+
 	fmt.Println("query did not find func: " + function) //error
 
 	return nil, errors.New("Received unknown function query")
